@@ -1,3 +1,5 @@
+import datetime
+
 import scrapy
 
 
@@ -42,7 +44,8 @@ class RobinsonSpider(scrapy.Spider):
         self.export_data()
 
     def export_data(self):
-        with open("export.tsv", "w") as file:
+        filename = "robinson_scrape-{}.tsv".format(datetime.datetime.now().strftime('%Y-%m-%d-%H-%M'))
+        with open(filename, "w") as file:
             file.write("Naam\tUrl")
             for game in self.games:
                 file.write("\t")
