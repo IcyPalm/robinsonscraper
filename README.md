@@ -25,3 +25,17 @@ That folder should contain a file called README.md and scrapy.cfg
  9. When that finishes installing run this command to actually scrape the data:`scrapy crawl robinson`
 
 
+## Using it
+
+The final step of the installation process creates a file called `export.tsv` that contains all the scraped data. A column with the name,url and columns for each game that is going on containing the current votes for that.
+
+If you closed the command window or want to run it again on another day:
+
+ 1. Backup the previous export.tsv, it will be overwritten!(needs a fix)
+ 2. Browse to the folder where you unzipped the files(Installation step 6)
+ 3. Run the command again: `scrapy crawl robinson`
+ 
+To use the data, it is easiest to open the `export.tsv` file with a text editor like notepad(++) and copy the whole contents. 
+Paste the data in Excel or another spreadsheet program and do with it what you want
+
+Tip: When using Excel, create a table so you can sort
