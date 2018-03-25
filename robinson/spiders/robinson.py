@@ -1,6 +1,7 @@
 import datetime
 
 import scrapy
+import xlsxwriter
 
 
 class RobinsonSpider(scrapy.Spider):
@@ -47,20 +48,23 @@ class RobinsonSpider(scrapy.Spider):
         self.export_data()
 
     def export_data(self):
-        filename = "robinson_scrape-{}.tsv".format(datetime.datetime.now().strftime('%Y-%m-%d-%H-%M'))
-        with open(filename, "w") as file:
-            file.write("Naam\tUrl")
+        filename = "robinson_scrape-{}.xlsx".format(datetime.datetime.now().strftime('%Y-%m-%d-%H-%M'))
+        workbook = xlsxwriter.Workbook(filename)
+        worksheet = workbook.add_worksheet()
+        columns = [{'header': 'Naam'},
+                   {'header': 'Url'}
+                   ]
+        for game in self.games:
+            columns.append({'header': game})
+        data = []
+        for naam in self.data.keys():
+            row = [naam, self.data[naam]["url"]]
             for game in self.games:
-                file.write("\t")
-                file.write(game)
-            file.write("\n")
+                votes = 0
+                if game in self.data[naam]:
+                    votes = int(self.data[naam][game])
+                row.append(votes)
+            data.append(row)
 
-            for naam in self.data.keys():
-                url = self.data[naam]["url"]
-                file.write("{}\t{}".format(naam, url))
-                for game in self.games:
-                    votes = 0;
-                    if game in self.data[naam]:
-                        votes = self.data[naam][game]
-                    file.write("\t{}".format(votes))
-                file.write("\n")
+        worksheet.add_table(0, 0, len(data), len(data[0])-1, {'data': data, 'columns': columns})
+        workbook.close()
