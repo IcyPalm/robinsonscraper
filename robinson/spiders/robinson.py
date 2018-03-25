@@ -33,7 +33,10 @@ class RobinsonSpider(scrapy.Spider):
                 return
             games = response.css(".item-video")
             for game in games:
-                game_naam = game.css(".text-subtitle").css("::text").extract_first().strip()
+                game_naam = game.css(".text-subtitle").css("::text").extract_first()
+                if game_naam is None:
+                    continue
+                game_naam = game_naam.strip()
                 game_stemmen = game.css(".votes").css("::text").extract_first().strip(" stemmen")
                 if game_naam not in self.games:
                     self.games.append(game_naam)
